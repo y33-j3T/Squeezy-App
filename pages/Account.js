@@ -1,12 +1,8 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
-import tailwind from 'tailwind-rn';
+import React, {useState, useContext} from 'react';
+import {SafeAreaView, StyleSheet, Text, View, TextInput} from 'react-native';
+import tailwind, {getColor} from 'tailwind-rn';
+import Icon, {Icons} from '../components/Icons';
+import {SqueezeContext} from '../contexts/SqueezeContext';
 
 export default function Account() {
   const styles = StyleSheet.create({
@@ -21,23 +17,59 @@ export default function Account() {
     },
   });
 
+  const {squeezeCount} = useContext(SqueezeContext);
+
   return (
     <SafeAreaView
-      style={tailwind('h-full bg-blue-200 items-center justify-center flex')}>
-      <View style={tailwind('h-1/2 items-center bg-blue-100 w-full py-10')}>
-        <Text>Account</Text>
-      </View>
-      {/* <Button color="pink" title="click me" /> */}
+      style={tailwind(
+        'h-full w-full bg-blue-200 items-start justify-start flex p-6 flex',
+      )}>
+      <TextField header="Squeezy's Name" />
+      <InfoField header="Squeeze Count" info={squeezeCount} />
     </SafeAreaView>
   );
 }
 
-const Info = ({header, footer}) => {
+const TextField = ({header}) => {
+  const {squeezyName, onChangeSqueezyName} = useContext(SqueezeContext);
+  const [editable, setEditable] = useState(false);
+
   return (
-    <View
-      style={tailwind('border-2 border-blue-300 p-2 rounded-xl w-2/5 my-2')}>
-      <Text>{header}</Text>
-      <Text style={tailwind('text-blue-500')}>{footer}</Text>
+    <View style={tailwind('bg-gray-50 p-2 rounded-xl w-full my-2')}>
+      <View style={tailwind('flex flex-row justify-between')}>
+        <Text style={tailwind('text-gray-600 font-medium')}>{header}</Text>
+        <View onTouchEnd={() => setEditable(!editable)}>
+          <Icon
+            size={18}
+            type={Icons.Feather}
+            name="edit"
+            color={getColor('blue-400')}
+          />
+        </View>
+      </View>
+      <TextInput
+        style={
+          editable
+            ? tailwind('text-blue-500 h-12 border border-blue-400')
+            : tailwind('text-blue-500 h-12')
+        }
+        onChangeText={onChangeSqueezyName}
+        value={squeezyName}
+        keyboardType="default"
+        onSubmitEditing={() => setEditable(!editable)}
+        editable={editable}
+      />
+    </View>
+  );
+};
+
+const InfoField = ({header, info}) => {
+  return (
+    <View style={tailwind('bg-gray-50 p-2 rounded-xl w-full my-2')}>
+      <Text style={tailwind('text-gray-600 font-medium')}>{header}</Text>
+      <TextInput editable={false} style={tailwind('h-12 text-blue-500')}>
+        {info}
+      </TextInput>
     </View>
   );
 };

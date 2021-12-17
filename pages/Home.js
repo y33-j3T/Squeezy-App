@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import tailwind from 'tailwind-rn';
+import {SqueezeContext} from '../contexts/SqueezeContext';
 
 export default function Home() {
   const styles = StyleSheet.create({
@@ -21,12 +22,14 @@ export default function Home() {
     },
   });
 
+  const {squeezyName, squeezeCount} = useContext(SqueezeContext);
+
   return (
     <SafeAreaView
       style={tailwind('h-full bg-blue-200 items-center justify-center flex')}>
       <View style={tailwind('h-1/2 items-center bg-blue-100 w-full py-10')}>
         <Text style={tailwind('text-3xl text-blue-500 my-2')}>
-          Hi, I'm squeezy!
+          Hi, I'm {squeezyName}
         </Text>
         <TouchableHighlight
           style={tailwind(
@@ -38,7 +41,7 @@ export default function Home() {
       </View>
       <View style={styles.info_view}>
         <View style={styles.info}>
-          <Info header="Squeeze Count" footer="1000" />
+          <Info header="Squeeze Count" footer={squeezeCount} />
           <Info header="Mood" footer="Great!" />
         </View>
         <View style={styles.info}>

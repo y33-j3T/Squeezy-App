@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +6,8 @@ import {
   View,
 } from 'react-native';
 import tailwind from 'tailwind-rn';
+import React, {useState, useCallback, useEffect} from 'react';
+import {GiftedChat} from 'react-native-gifted-chat';
 
 export default function Chat() {
   const styles = StyleSheet.create({

@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {useEffect, useRef} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View, Keyboard} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {getColor} from 'tailwind-rn';
 import Home from '../pages/Home';
@@ -8,6 +8,7 @@ import Account from '../pages/Account';
 import Chat from '../pages/Chat';
 import Games from '../pages/Games';
 import Icon, {Icons} from './Icons';
+import tailwind from 'tailwind-rn';
 
 const TabArr = [
   {
@@ -104,11 +105,27 @@ const TabButton = props => {
 };
 
 export default function BottomTab() {
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: keyboardStatus ? tailwind('hidden') : styles.tabBar,
       }}>
       {TabArr.map((item, index) => {
         return (
