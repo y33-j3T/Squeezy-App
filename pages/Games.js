@@ -19,25 +19,19 @@ export default function Games() {
       width: '100%',
       justifyContent: 'space-evenly',
     },
+    header_text: {
+      ...tailwind('text-black font-medium text-4xl'),
+    },
   });
 
   return (
-    <SafeAreaView
-      style={tailwind('h-full bg-blue-200 items-center justify-center flex')}>
-      <View style={tailwind('h-1/2 items-center bg-blue-100 w-full py-10')}>
+    <SafeAreaView style={tailwind('h-full bg-blue-200 p-6')}>
+      <View style={tailwind('')}>
+        <Text style={styles.header_text}>Games</Text>
+      </View>
+      <View>
         <Text>Games</Text>
       </View>
-      {/* <Button color="pink" title="click me" /> */}
     </SafeAreaView>
   );
 }
-
-const Info = ({header, footer}) => {
-  return (
-    <View
-      style={tailwind('border-2 border-blue-300 p-2 rounded-xl w-2/5 my-2')}>
-      <Text>{header}</Text>
-      <Text style={tailwind('text-blue-500')}>{footer}</Text>
-    </View>
-  );
-};

@@ -4,10 +4,11 @@ import {
   Text,
   TouchableHighlight,
   View,
+  TextInput,
 } from 'react-native';
 import tailwind from 'tailwind-rn';
 import React, {useState, useCallback, useEffect} from 'react';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat, InputToolbar} from 'react-native-gifted-chat';
 
 export default function Chat() {
   const styles = StyleSheet.create({
@@ -20,25 +21,67 @@ export default function Chat() {
       width: '100%',
       justifyContent: 'space-evenly',
     },
+    chat_room: {
+      ...tailwind('h-full w-full bg-blue-200'),
+    },
+    chat_area: {
+      ...tailwind('h-full w-full bg-blue-200'),
+      height: '85%',
+    },
   });
 
   return (
-    <SafeAreaView
-      style={tailwind('h-full bg-blue-200 items-center justify-center flex')}>
-      <View style={tailwind('h-1/2 items-center bg-blue-100 w-full py-10')}>
-        <Text>Chat</Text>
-      </View>
-      {/* <Button color="pink" title="click me" /> */}
+    <SafeAreaView style={styles.chat_room}>
+      <SafeAreaView style={styles.chat_area}>
+        <Example />
+      </SafeAreaView>
     </SafeAreaView>
   );
 }
 
-const Info = ({header, footer}) => {
+function Example() {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: "Hi, how are you? I'm squeezy",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+    ]);
+  }, []);
+
+  const onSend = useCallback((messages = []) => {
+    setMessages(previousMessages =>
+      GiftedChat.append(previousMessages, messages),
+    );
+  }, []);
+
   return (
-    <View
-      style={tailwind('border-2 border-blue-300 p-2 rounded-xl w-2/5 my-2')}>
-      <Text>{header}</Text>
-      <Text style={tailwind('text-blue-500')}>{footer}</Text>
-    </View>
+    <GiftedChat
+      messages={messages}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: 1,
+      }}
+    />
   );
+}
+
+const AiReply = () => {
+  return <Text> test </Text>;
+};
+
+const UserReply = () => {
+  return <Text> test </Text>;
+};
+
+const UserInput = () => {
+  return <TextInput />;
 };

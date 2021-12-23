@@ -4,8 +4,8 @@ import BottomTab from './components/BottomTab';
 import {SqueezeContext} from './contexts/SqueezeContext';
 
 const App = () => {
-  const [squeezyName, onChangeSqueezyName] = useState('Bob');
-  const [squeezeCount, onChangeSqueeze] = useState(100);
+  const [squeezyName, onChangeSqueezyName] = useState('Squeezy');
+  const [squeezeCount, onChangeSqueeze] = useState(0);
 
   return (
     <NavigationContainer>
