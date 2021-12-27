@@ -6,11 +6,19 @@ import {SqueezeContext} from './contexts/SqueezeContext';
 const App = () => {
   const [squeezyName, onChangeSqueezyName] = useState('Squeezy');
   const [squeezeCount, onChangeSqueeze] = useState(0);
+  const [gameRunning, onChangeGameRunning] = useState(false);
 
   return (
     <NavigationContainer>
       <SqueezeContext.Provider
-        value={{squeezyName, onChangeSqueezyName, squeezeCount}}>
+        value={{
+          squeezyName,
+          onChangeSqueezyName,
+          squeezeCount,
+          onChangeSqueeze,
+          gameRunning,
+          onChangeGameRunning,
+        }}>
         <BottomTab />
       </SqueezeContext.Provider>
     </NavigationContainer>
