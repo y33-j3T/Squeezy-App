@@ -62,23 +62,25 @@ function GamesScreen({navigation}) {
 function GameShowcasePanel({navigation}) {
   const styles = StyleSheet.create({
     panel_style: {
-      ...tailwind('m-4 p-4 bg-white text-center items-center justify-center'),
+      ...tailwind(
+        'm-4 p-4 bg-white text-center items-center justify-center rounded-xl',
+      ),
       alignItems: 'center',
       justifyContent: 'center',
     },
     header_style: {
-      ...tailwind('text-lg p-2 text-center text-black'),
+      ...tailwind('text-xl p-2 text-center text-black font-semibold'),
     },
     button_style: {
       ...tailwind(
-        'bg-blue-500 text-white font-medium py-2 px-4 rounded-xl text-center',
+        'bg-pink-200 w-full text-black font-medium py-2 px-4 rounded-xl text-center',
       ),
     },
   });
 
   return (
     <View style={styles.panel_style}>
-      <Text style={styles.header_style}>First test game</Text>
+      <Text style={styles.header_style}>Squeezy Bird</Text>
       <Text
         onPress={() => navigation.navigate('Squeezy Bird')}
         title="Squeezy Bird"

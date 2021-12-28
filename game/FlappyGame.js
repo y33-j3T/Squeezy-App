@@ -4,8 +4,9 @@ import {GameEngine} from 'react-native-game-engine';
 import entities from './entities/index';
 import Physics from './physics';
 import {SqueezeContext} from '../contexts/SqueezeContext';
+import tailwind, {getColor} from 'tailwind-rn';
 
-export default function FlappyGame() {
+export default function FlappyGame({navigation}) {
   const [running, setRunning] = useState(false);
   const [gameEngine, setGameEngine] = useState(null);
   const [currentPoints, setCurrentPoints] = useState(0);
@@ -39,11 +40,22 @@ export default function FlappyGame() {
       alignItems: 'center',
     },
     start_button: {
-      backgroundColor: 'black',
+      backgroundColor: getColor('blue-400'),
+      paddingHorizontal: 30,
+      paddingVertical: 10,
+      ...tailwind('mb-6'),
+    },
+    start_button_text: {
+      fontWeight: 'bold',
+      color: 'white',
+      fontSize: 30,
+    },
+    back_button: {
+      backgroundColor: getColor('blue-400'),
       paddingHorizontal: 30,
       paddingVertical: 10,
     },
-    start_button_text: {
+    back_button_text: {
       fontWeight: 'bold',
       color: 'white',
       fontSize: 30,
@@ -87,6 +99,15 @@ export default function FlappyGame() {
             }}>
             <Text style={styles.start_button_text}>START GAME</Text>
           </TouchableOpacity>
+          <View style={styles.back_button}>
+            <TouchableOpacity
+              style={styles.back_button_text}
+              onPress={() => {
+                navigation.popToTop();
+              }}>
+              <Text style={styles.start_button_text}>GO BACK</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ) : null}
     </View>
