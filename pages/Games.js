@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import tailwind, {getColor} from 'tailwind-rn';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import FlappyGame from '../game/FlappyGame';
+import FlappyGame from '../birdgame/FlappyGame';
 import {SqueezeContext} from '../contexts/SqueezeContext';
 
 const Stack = createNativeStackNavigator();
