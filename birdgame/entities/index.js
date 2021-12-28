@@ -18,6 +18,7 @@ export default restart => {
 
   const pipeSizePosA = getPipeSizePosPair();
   const pipeSizePosB = getPipeSizePosPair(windowWidth * 0.9);
+
   return {
     physics: {engine, world},
 

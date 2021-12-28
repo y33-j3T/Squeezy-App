@@ -9,12 +9,14 @@ const windowWidth = Dimensions.get('window').width;
 const Physics = (entities, {touches, time, dispatch}) => {
   let engine = entities.physics.engine;
 
+  const jumpHeight = windowHeight * 0.015;
+
   touches
     .filter(t => t.type === 'press')
     .forEach(t => {
       Matter.Body.setVelocity(entities.Bird.body, {
         x: 0,
-        y: -8,
+        y: -3,
       });
     });
 
@@ -44,9 +46,9 @@ const Physics = (entities, {touches, time, dispatch}) => {
       entities[`ObstacleTop${index}`].point = false;
     }
 
-    Matter.Body.translate(entities[`ObstacleTop${index}`].body, {x: -3, y: 0});
+    Matter.Body.translate(entities[`ObstacleTop${index}`].body, {x: -2, y: 0});
     Matter.Body.translate(entities[`ObstacleBottom${index}`].body, {
-      x: -3,
+      x: -2,
       y: 0,
     });
   }

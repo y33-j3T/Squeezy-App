@@ -22,10 +22,12 @@ Squeezy may be able to show some simple colors, make some simple sounds and vibr
 
 Moreover, through the app, Squeezy is able to tell you what are the times that you’ve played with it, the counts that you’ve squeezed it and how hard you’ve squeezed it. You also can play some games using Squeezy as a controller such as Flappy bird. After that, it can suggest ways to relax. At the end of the day, Squeezy would automatically send you a notification to recharge.
 
-### Building the apk
+### Building the APK
 
 #### For android
 
-Run `./gradlew assembleRelease` in the android directory.
+Run `./gradlew assembleRelease` followed by `./gradlew bundleRelease` in the android directory.
 
-Get the apk file
+### Testing the APK
+
+Run `npx react-native run-android --variant=release`

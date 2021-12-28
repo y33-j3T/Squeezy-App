@@ -13,7 +13,6 @@
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "galio-framework": "^0.8.0",
     "matter-js": "^0.18.0",
     "react": "17.0.2",
     "react-native": "0.66.4",
