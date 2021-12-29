@@ -26,7 +26,11 @@ Moreover, through the app, Squeezy is able to tell you what are the times that y
 
 #### For android
 
-Run `./gradlew assembleRelease` followed by `./gradlew bundleRelease` in the android directory.
+Steps:
+
+1. `gradlew clean`
+2. `npm install`
+3. Run `./gradlew assembleRelease` followed by `./gradlew bundleRelease` in the android directory.
 
 ### Testing the APK
 
