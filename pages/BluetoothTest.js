@@ -40,7 +40,7 @@ const BluetoothScanner = () => {
       }, true);
       return () => subscription.remove();
     });
-  }, [manager]);
+  }, [logData]);
 
   return (
     <View style={{flex: 1, padding: 10}}>
@@ -73,7 +73,7 @@ const BluetoothScanner = () => {
       </View>
 
       <View style={{flex: 2, padding: 10}}>
-        <Text style={{fontWeight: 'bold'}}>
+        <Text style={{fontWeight: 'bold', textColor: 'black'}}>
           Scanned Devices ({deviceCount})
         </Text>
         <FlatList
