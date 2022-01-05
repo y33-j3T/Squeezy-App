@@ -58,3 +58,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+./env.js
+./squeezy-ifb9-b6035778d915.json
