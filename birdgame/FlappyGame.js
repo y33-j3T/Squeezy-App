@@ -20,6 +20,7 @@ export default function FlappyGame({navigation}) {
   const styles = StyleSheet.create({
     view_container: {
       flex: 1,
+      backgroundColor: getColor('blue-200'),
     },
     game_engine: {
       position: 'absolute',
@@ -33,6 +34,7 @@ export default function FlappyGame({navigation}) {
       fontSize: 40,
       fontWeight: 'bold',
       margin: 20,
+      zIndex: 1,
     },
     start_container: {
       flex: 1,
