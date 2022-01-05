@@ -23,20 +23,11 @@ export default function Chat() {
   }, []);
 
   const styles = StyleSheet.create({
-    info_view: {
-      flexDirection: 'column',
-      ...tailwind('h-1/2 items-center bg-pink-100 w-full py-6'),
-    },
-    info: {
-      flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'space-evenly',
-    },
     chat_room: {
-      ...tailwind('h-full w-full bg-blue-200'),
+      ...tailwind('h-full w-full bg-blue-200 text-black'),
     },
     chat_area: {
-      ...tailwind('h-full w-full bg-blue-200'),
+      ...tailwind('h-full w-full bg-blue-200 text-black'),
       height: keyboardStatus ? '100%' : '85%',
     },
   });
