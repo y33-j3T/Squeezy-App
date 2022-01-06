@@ -8,6 +8,7 @@ import Account from '../pages/Account';
 import Chat from '../pages/Chat';
 import Games from '../pages/Games';
 import Home from '../pages/Home';
+import BluetoothScanner from '../pages/BluetoothTest';
 import Icon, {Icons} from './Icons';
 
 const TabArr = [
@@ -39,6 +40,13 @@ const TabArr = [
     type: Icons.FontAwesome,
     icon: 'user-circle-o',
     component: Account,
+  },
+  {
+    route: 'Bluetooth',
+    label: 'Bluetooth',
+    type: Icons.FontAwesome,
+    icon: 'bluetooth-b',
+    component: BluetoothScanner,
   },
 ];
 
