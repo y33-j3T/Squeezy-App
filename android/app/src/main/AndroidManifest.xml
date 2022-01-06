@@ -10,6 +10,10 @@
         https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions
       -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <!-- Needed only if your app looks for Bluetooth devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <!-- Needed only if your app makes the device discoverable to Bluetooth devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
     <application
       android:name=".MainApplication"

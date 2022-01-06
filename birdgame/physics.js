@@ -16,6 +16,7 @@ const Physics = (entities, {touches, time, dispatch}) => {
         x: 0,
         y: -6,
       });
+      dispatch({type: 'count'});
     });
 
   Matter.Engine.update(engine, time.delta);

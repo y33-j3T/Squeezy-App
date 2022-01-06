@@ -1,5 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableHighlight,
+} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import entities from './entities/index';
 import Physics from './physics';
@@ -10,8 +16,10 @@ export default function FlappyGame({navigation}) {
   const [running, setRunning] = useState(false);
   const [gameEngine, setGameEngine] = useState(null);
   const [currentPoints, setCurrentPoints] = useState(0);
+  const [touch, setTouch] = useState(0);
 
-  const {onChangeGameRunning} = useContext(SqueezeContext);
+  const {onChangeGameRunning, squeezeCount, onChangeSqueeze} =
+    useContext(SqueezeContext);
 
   useEffect(() => {
     setRunning(false);
@@ -76,10 +84,15 @@ export default function FlappyGame({navigation}) {
         running={running}
         onEvent={e => {
           switch (e.type) {
+            case 'count':
+              setTouch(touch + 1);
+              break;
             case 'game_over':
               setRunning(false);
               onChangeGameRunning(false);
               gameEngine.stop();
+              setTouch(0);
+              onChangeSqueeze(squeezeCount + touch);
               break;
             case 'new_point':
               setCurrentPoints(currentPoints + 1);

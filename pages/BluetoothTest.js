@@ -14,9 +14,8 @@ import {
   FlatList,
   TouchableHighlight,
 } from 'react-native';
-
+import {stringToBytes, convertString} from 'convert-string';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import BleManager from 'react-native-ble-manager';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -86,6 +85,53 @@ const App = () => {
         peripherals.set(peripheral.id, peripheral);
         setList(Array.from(peripherals.values()));
       }
+    });
+  };
+
+  const [data, setData] = useState({});
+  const [data2, setData2] = useState({});
+
+  const connectSqueezy = peripheral => {
+    const toSend = stringToBytes(1);
+    // const dataByte = convertString.UTF8.stringToBytes(toSend);
+
+    BleManager.connect(peripheral.id).then(() => {
+      setData2(peripheral);
+      let p = peripherals.get(peripheral.id);
+      if (p) {
+        p.connected = true;
+        peripherals.set(peripheral.id, p);
+        setList(Array.from(peripherals.values()));
+      }
+      console.log('Connected to ' + peripheral.id);
+
+      setTimeout(() => {
+        /* Test read current RSSI value */
+
+        BleManager.retrieveServices(peripheral.id).then(peripheralData => {
+          setData(peripheralData);
+          // BleManager.startNotification(
+          //   peripheral.id,
+          //   peripheral.characteristics[0].service,
+          //   peripheral.characteristics[0].characteristic,
+          // )
+          //   .then(() => {
+          //     console.log('Notification started');
+          //   })
+          //   .catch(error => {
+          //     console.log(error);
+          //   });
+          BleManager.write('84:CC:A8:78:E7:12', '180A', '2A57', toSend)
+            .then(() => {
+              console.log('Writed: ' + data);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }, 900);
+      }).catch(error => {
+        console.log('Connection error', error);
+      });
     });
   };
 
@@ -189,7 +235,7 @@ const App = () => {
   const renderItem = item => {
     const color = item.connected ? 'green' : '#fff';
     return (
-      <TouchableHighlight onPress={() => testPeripheral(item)}>
+      <TouchableHighlight onPress={() => connectSqueezy(item)}>
         <View style={[styles.row, {backgroundColor: color}]}>
           <Text
             style={{
@@ -218,6 +264,16 @@ const App = () => {
               paddingBottom: 20,
             }}>
             {item.id}
+          </Text>
+          <Text
+            style={{
+              fontSize: 8,
+              textAlign: 'center',
+              color: '#333333',
+              padding: 2,
+              paddingBottom: 20,
+            }}>
+            {JSON.stringify(data)}
           </Text>
         </View>
       </TouchableHighlight>
