@@ -1,22 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import {Buffer} from 'buffer';
+import {stringToBytes} from 'convert-string';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  NativeModules,
-  NativeEventEmitter,
   Button,
-  Platform,
-  PermissionsAndroid,
   FlatList,
+  NativeEventEmitter,
+  NativeModules,
+  PermissionsAndroid,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   TouchableHighlight,
+  View,
 } from 'react-native';
-import {stringToBytes, convertString} from 'convert-string';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import BleManager from 'react-native-ble-manager';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -89,10 +90,10 @@ const App = () => {
   };
 
   const [data, setData] = useState({});
-  const [data2, setData2] = useState({});
+  const [data2, setData2] = useState('test');
 
   const connectSqueezy = peripheral => {
-    const toSend = stringToBytes(1);
+    const toSend = stringToBytes('1');
     // const dataByte = convertString.UTF8.stringToBytes(toSend);
 
     BleManager.connect(peripheral.id).then(() => {
@@ -135,46 +136,153 @@ const App = () => {
     });
   };
 
-  const testPeripheral = peripheral => {
-    if (peripheral) {
-      if (peripheral.connected) {
-        BleManager.disconnect(peripheral.id);
-      } else {
-        BleManager.connect(peripheral.id)
-          .then(() => {
-            let p = peripherals.get(peripheral.id);
-            if (p) {
-              p.connected = true;
-              peripherals.set(peripheral.id, p);
-              setList(Array.from(peripherals.values()));
-            }
-            console.log('Connected to ' + peripheral.id);
+  const sendSignalSqueezy = num => {
+    const toSend = stringToBytes(num);
+    // const dataByte = convertString.UTF8.stringToBytes(toSend);
 
-            setTimeout(() => {
-              /* Test read current RSSI value */
-              BleManager.retrieveServices(peripheral.id).then(
-                peripheralData => {
-                  console.log('Retrieved peripheral services', peripheralData);
-
-                  BleManager.readRSSI(peripheral.id).then(rssi => {
-                    console.log('Retrieved actual RSSI value', rssi);
-                    let p = peripherals.get(peripheral.id);
-                    if (p) {
-                      p.rssi = rssi;
-                      peripherals.set(peripheral.id, p);
-                      setList(Array.from(peripherals.values()));
-                    }
-                  });
-                },
-              );
-            }, 900);
-          })
-          .catch(error => {
-            console.log('Connection error', error);
-          });
+    BleManager.connect('84:CC:A8:78:E7:12').then(() => {
+      let p = peripherals.get('84:CC:A8:78:E7:12');
+      if (p) {
+        p.connected = true;
+        peripherals.set('84:CC:A8:78:E7:12', p);
+        setList(Array.from(peripherals.values()));
       }
-    }
+      console.log('Connected to ' + '84:CC:A8:78:E7:12');
+
+      setTimeout(() => {
+        /* Test read current RSSI value */
+
+        BleManager.retrieveServices('84:CC:A8:78:E7:12').then(
+          peripheralData => {
+            setData(peripheralData);
+            // BleManager.startNotification(
+            //   peripheral.id,
+            //   peripheral.characteristics[0].service,
+            //   peripheral.characteristics[0].characteristic,
+            // )
+            //   .then(() => {
+            //     console.log('Notification started');
+            //   })
+            //   .catch(error => {
+            //     console.log(error);
+            //   });
+            BleManager.write('84:CC:A8:78:E7:12', '180A', '2A57', toSend)
+              .then(() => {
+                BleManager.read('84:CC:A8:78:E7:12', '180A', '2A57')
+                  .then(readData => {
+                    // const buffer = Buffer.Buffer.from(readData); //https://github.com/feross/buffer#convert-arraybuffer-to-buffer
+                    // const sensorData = buffer.readUInt8(1, true);
+                    setData2(readData);
+                  })
+                  .catch(error => {
+                    // Failure code
+                    setData2('nil');
+                  });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+          900,
+        );
+      }).catch(error => {
+        console.log('Connection error', error);
+      });
+    });
   };
+
+  // async function connectAndPrepare() {
+  //   // Connect to device
+  //   await BleManager.connect('84:CC:A8:78:E7:12');
+  //   // Before startNotification you need to call retrieveServices
+  //   await BleManager.retrieveServices('84:CC:A8:78:E7:12');
+  //   // To enable BleManagerDidUpdateValueForCharacteristic listener
+  //   await BleManager.startNotification('84:CC:A8:78:E7:12', '180A', '2A58');
+  //   // Add event listener
+  //   bleManagerEmitter.addListener(
+  //     'BleManagerDidUpdateValueForCharacteristic',
+  //     ({value, characteristic}) => {
+  //       // Convert bytes array to string
+  //       setData2(value);
+  //       // console.log(`Recieved ${value} for characteristic ${characteristic}`);
+  //     },
+  //   );
+  //   // Actions triggereng BleManagerDidUpdateValueForCharacteristic event
+  // }
+
+  // connectAndPrepare();
+
+  const recieveSignalSqueezy = () => {
+    // const dataByte = convertString.UTF8.stringToBytes(toSend);
+    BleManager.connect('84:CC:A8:78:E7:12').then(() => {
+      let p = peripherals.get('84:CC:A8:78:E7:12');
+      if (p) {
+        p.connected = true;
+        peripherals.set('84:CC:A8:78:E7:12', p);
+        setList(Array.from(peripherals.values()));
+      }
+      console.log('Connected to ' + '84:CC:A8:78:E7:12');
+
+      setTimeout(() => {
+        /* Test read current RSSI value */
+        BleManager.retrieveServices('84:CC:A8:78:E7:12').then(
+          peripheralData => {
+            BleManager.read('84:CC:A8:78:E7:12', '180A', '2A57')
+              .then(readData => {
+                setData2(readData);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+          900,
+        );
+      }).catch(error => {
+        console.log('Connection error', error);
+      });
+    });
+  };
+
+  // const testPeripheral = peripheral => {
+  //   if (peripheral) {
+  //     if (peripheral.connected) {
+  //       BleManager.disconnect(peripheral.id);
+  //     } else {
+  //       BleManager.connect(peripheral.id)
+  //         .then(() => {
+  //           let p = peripherals.get(peripheral.id);
+  //           if (p) {
+  //             p.connected = true;
+  //             peripherals.set(peripheral.id, p);
+  //             setList(Array.from(peripherals.values()));
+  //           }
+  //           console.log('Connected to ' + peripheral.id);
+
+  //           setTimeout(() => {
+  //             /* Test read current RSSI value */
+  //             BleManager.retrieveServices(peripheral.id).then(
+  //               peripheralData => {
+  //                 console.log('Retrieved peripheral services', peripheralData);
+
+  //                 BleManager.readRSSI(peripheral.id).then(rssi => {
+  //                   console.log('Retrieved actual RSSI value', rssi);
+  //                   let p = peripherals.get(peripheral.id);
+  //                   if (p) {
+  //                     p.rssi = rssi;
+  //                     peripherals.set(peripheral.id, p);
+  //                     setList(Array.from(peripherals.values()));
+  //                   }
+  //                 });
+  //               },
+  //             );
+  //           }, 900);
+  //         })
+  //         .catch(error => {
+  //           console.log('Connection error', error);
+  //         });
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     BleManager.start({showAlert: false});
@@ -305,6 +413,55 @@ const App = () => {
                 title="Retrieve connected peripherals"
                 onPress={() => retrieveConnected()}
               />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Button
+                title="Turn on Lights"
+                onPress={() => sendSignalSqueezy('1')}
+              />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Button
+                title="Turn off Lights"
+                onPress={() => sendSignalSqueezy('2')}
+              />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Button
+                title="Fast Blink"
+                onPress={() => sendSignalSqueezy('3')}
+              />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Button
+                title="Slow Blink"
+                onPress={() => sendSignalSqueezy('4')}
+              />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Button
+                title="Recieve Start"
+                onPress={() => recieveSignalSqueezy()}
+              />
+            </View>
+
+            <View style={{margin: 10}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  textAlign: 'center',
+                  color: 'white',
+                  padding: 2,
+                  paddingBottom: 20,
+                  backgroundColor: 'black',
+                }}>
+                {data2}
+              </Text>
             </View>
 
             {list.length == 0 && (
