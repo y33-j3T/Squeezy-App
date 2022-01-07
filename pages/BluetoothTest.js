@@ -65,13 +65,14 @@ const App = () => {
   };
 
   const handleUpdateValueForCharacteristic = data => {
-    console.log(
-      'Received data from ' +
-        data.peripheral +
-        ' characteristic ' +
-        data.characteristic,
-      data.value,
-    );
+    setData2(JSON.stringify(data));
+    // console.log(
+    //   'Received data from ' +
+    //     data.peripheral +
+    //     ' characteristic ' +
+    //     data.characteristic,
+    //   data.value,
+    // );
   };
 
   const retrieveConnected = () => {
@@ -191,27 +192,6 @@ const App = () => {
     });
   };
 
-  // async function connectAndPrepare() {
-  //   // Connect to device
-  //   await BleManager.connect('84:CC:A8:78:E7:12');
-  //   // Before startNotification you need to call retrieveServices
-  //   await BleManager.retrieveServices('84:CC:A8:78:E7:12');
-  //   // To enable BleManagerDidUpdateValueForCharacteristic listener
-  //   await BleManager.startNotification('84:CC:A8:78:E7:12', '180A', '2A58');
-  //   // Add event listener
-  //   bleManagerEmitter.addListener(
-  //     'BleManagerDidUpdateValueForCharacteristic',
-  //     ({value, characteristic}) => {
-  //       // Convert bytes array to string
-  //       setData2(value);
-  //       // console.log(`Recieved ${value} for characteristic ${characteristic}`);
-  //     },
-  //   );
-  //   // Actions triggereng BleManagerDidUpdateValueForCharacteristic event
-  // }
-
-  // connectAndPrepare();
-
   const recieveSignalSqueezy = () => {
     // const dataByte = convertString.UTF8.stringToBytes(toSend);
     BleManager.connect('84:CC:A8:78:E7:12').then(() => {
@@ -242,47 +222,6 @@ const App = () => {
       });
     });
   };
-
-  // const testPeripheral = peripheral => {
-  //   if (peripheral) {
-  //     if (peripheral.connected) {
-  //       BleManager.disconnect(peripheral.id);
-  //     } else {
-  //       BleManager.connect(peripheral.id)
-  //         .then(() => {
-  //           let p = peripherals.get(peripheral.id);
-  //           if (p) {
-  //             p.connected = true;
-  //             peripherals.set(peripheral.id, p);
-  //             setList(Array.from(peripherals.values()));
-  //           }
-  //           console.log('Connected to ' + peripheral.id);
-
-  //           setTimeout(() => {
-  //             /* Test read current RSSI value */
-  //             BleManager.retrieveServices(peripheral.id).then(
-  //               peripheralData => {
-  //                 console.log('Retrieved peripheral services', peripheralData);
-
-  //                 BleManager.readRSSI(peripheral.id).then(rssi => {
-  //                   console.log('Retrieved actual RSSI value', rssi);
-  //                   let p = peripherals.get(peripheral.id);
-  //                   if (p) {
-  //                     p.rssi = rssi;
-  //                     peripherals.set(peripheral.id, p);
-  //                     setList(Array.from(peripherals.values()));
-  //                   }
-  //                 });
-  //               },
-  //             );
-  //           }, 900);
-  //         })
-  //         .catch(error => {
-  //           console.log('Connection error', error);
-  //         });
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     BleManager.start({showAlert: false});
@@ -521,3 +460,64 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+// const testPeripheral = peripheral => {
+//   if (peripheral) {
+//     if (peripheral.connected) {
+//       BleManager.disconnect(peripheral.id);
+//     } else {
+//       BleManager.connect(peripheral.id)
+//         .then(() => {
+//           let p = peripherals.get(peripheral.id);
+//           if (p) {
+//             p.connected = true;
+//             peripherals.set(peripheral.id, p);
+//             setList(Array.from(peripherals.values()));
+//           }
+//           console.log('Connected to ' + peripheral.id);
+
+//           setTimeout(() => {
+//             /* Test read current RSSI value */
+//             BleManager.retrieveServices(peripheral.id).then(
+//               peripheralData => {
+//                 console.log('Retrieved peripheral services', peripheralData);
+
+//                 BleManager.readRSSI(peripheral.id).then(rssi => {
+//                   console.log('Retrieved actual RSSI value', rssi);
+//                   let p = peripherals.get(peripheral.id);
+//                   if (p) {
+//                     p.rssi = rssi;
+//                     peripherals.set(peripheral.id, p);
+//                     setList(Array.from(peripherals.values()));
+//                   }
+//                 });
+//               },
+//             );
+//           }, 900);
+//         })
+//         .catch(error => {
+//           console.log('Connection error', error);
+//         });
+//     }
+//   }
+// };
+
+// async function connectAndPrepare() {
+//   // Connect to device
+//   await BleManager.connect('84:CC:A8:78:E7:12');
+//   // Before startNotification you need to call retrieveServices
+//   await BleManager.retrieveServices('84:CC:A8:78:E7:12');
+//   // To enable BleManagerDidUpdateValueForCharacteristic listener
+//   await BleManager.startNotification('84:CC:A8:78:E7:12', '180A', '2A58');
+//   // Add event listener
+//   bleManagerEmitter.addListener(
+//     'BleManagerDidUpdateValueForCharacteristic',
+//     ({value, characteristic}) => {
+//       // Convert bytes array to string
+//       setData2(value);
+//       // console.log(`Recieved ${value} for characteristic ${characteristic}`);
+//     },
+//   );
+//   // Actions triggereng BleManagerDidUpdateValueForCharacteristic event
+// }
+
+// connectAndPrepare();
