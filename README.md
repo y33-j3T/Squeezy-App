@@ -1,5 +1,9 @@
 # Squeezy App - Squeeze your stress away!
 
+Won 2nd place in makerthon 2021! 
+
+Learn more [here](https://linktr.ee/projectsqueezy)
+
 ### System requirements
 
 Go through the set up page on [react native](https://reactnative.dev/docs/environment-setup)
