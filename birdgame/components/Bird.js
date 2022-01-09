@@ -1,6 +1,7 @@
 import React from 'react';
 import Matter from 'matter-js';
 import {View} from 'react-native';
+import {getColor} from 'tailwind-rn';
 
 const Bird = props => {
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x;
@@ -22,6 +23,8 @@ const Bird = props => {
         top: yBody,
         width: widthBody,
         height: heightBody,
+        backgroundColor: getColor('pink-200'),
+        borderRadius: widthBody / 2,
       }}
     />
   );

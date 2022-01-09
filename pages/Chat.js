@@ -1,7 +1,7 @@
 import React, {Component, useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Keyboard} from 'react-native';
 import {Dialogflow_V2} from 'react-native-dialogflow';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 import tailwind from 'tailwind-rn';
 import {dialogflowConfig} from '../env';
 
@@ -27,7 +27,7 @@ export default function Chat() {
       ...tailwind('h-full w-full bg-blue-200 text-black'),
     },
     chat_area: {
-      ...tailwind('h-full w-full bg-blue-200 text-black'),
+      ...tailwind('h-full w-full bg-blue-200'),
       height: keyboardStatus ? '100%' : '85%',
     },
   });
@@ -102,7 +102,9 @@ class ChatBot extends Component {
   render() {
     return (
       <GiftedChat
+        placeholderTextColor="black"
         messages={this.state.messages}
+        textInputStyle={{color: 'black'}}
         onSend={messages => this.onSend(messages)}
         user={{
           _id: 1,
