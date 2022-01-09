@@ -2,6 +2,8 @@
 
 Won 2nd place in makerthon 2021! 
 
+To test download and try the [APK](./SQUEEZY_APP.apk)
+
 Learn more [here](https://linktr.ee/projectsqueezy)
 
 ### System requirements
