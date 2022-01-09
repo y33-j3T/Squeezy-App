@@ -18,6 +18,8 @@ import {
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {bytesToString} from 'convert-string';
+
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -92,6 +94,25 @@ const App = () => {
 
   const [data, setData] = useState({});
   const [data2, setData2] = useState('test');
+
+  async function connectAndPrepare(peripheral, service, characteristic) {
+    // Connect to device
+    await BleManager.connect(peripheral);
+    // Before startNotification you need to call retrieveServices
+    await BleManager.retrieveServices(peripheral);
+    // To enable BleManagerDidUpdateValueForCharacteristic listener
+    await BleManager.startNotification(peripheral, service, characteristic);
+    // Add event listener
+    bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      ({value, peripheral, characteristic, service}) => {
+        // Convert bytes array to string
+        const data = bytesToString(value);
+        setData2(data);
+      },
+    );
+    // Actions triggereng BleManagerDidUpdateValueForCharacteristic event
+  }
 
   const connectSqueezy = peripheral => {
     const toSend = stringToBytes('1');
@@ -192,7 +213,7 @@ const App = () => {
     });
   };
 
-  const recieveSignalSqueezy = () => {
+  const receiveSignalSqueezy = () => {
     // const dataByte = convertString.UTF8.stringToBytes(toSend);
     BleManager.connect('84:CC:A8:78:E7:12').then(() => {
       let p = peripherals.get('84:CC:A8:78:E7:12');
@@ -209,7 +230,9 @@ const App = () => {
           peripheralData => {
             BleManager.read('84:CC:A8:78:E7:12', '180A', '2A57')
               .then(readData => {
-                setData2(readData);
+                if (readData === 9) {
+                  setData2(data2 + readData);
+                }
               })
               .catch(error => {
                 console.log(error);
@@ -226,6 +249,8 @@ const App = () => {
   useEffect(() => {
     BleManager.start({showAlert: false});
 
+    connectAndPrepare('84:CC:A8:78:E7:12', '180A', '2A57');
+
     bleManagerEmitter.addListener(
       'BleManagerDiscoverPeripheral',
       handleDiscoverPeripheral,
@@ -235,10 +260,10 @@ const App = () => {
       'BleManagerDisconnectPeripheral',
       handleDisconnectedPeripheral,
     );
-    bleManagerEmitter.addListener(
-      'BleManagerDidUpdateValueForCharacteristic',
-      handleUpdateValueForCharacteristic,
-    );
+    // bleManagerEmitter.addListener(
+    //   'BleManagerDidUpdateValueForCharacteristic',
+    //   receiveSignalSqueezy,
+    // );
 
     if (Platform.OS === 'android' && Platform.Version >= 23) {
       PermissionsAndroid.check(
@@ -271,10 +296,10 @@ const App = () => {
         'BleManagerDisconnectPeripheral',
         handleDisconnectedPeripheral,
       );
-      bleManagerEmitter.removeListener(
-        'BleManagerDidUpdateValueForCharacteristic',
-        handleUpdateValueForCharacteristic,
-      );
+      // bleManagerEmitter.removeListener(
+      //   'BleManagerDidUpdateValueForCharacteristic',
+      //   handleUpdateValueForCharacteristic,
+      // );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -385,7 +410,7 @@ const App = () => {
             <View style={{margin: 10}}>
               <Button
                 title="Recieve Start"
-                onPress={() => recieveSignalSqueezy()}
+                onPress={() => receiveSignalSqueezy()}
               />
             </View>
 
