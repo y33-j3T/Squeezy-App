@@ -46,10 +46,10 @@ export default function Home() {
           <Info header="Squeeze Count" footer={squeezeCount} />
           <Info header="Mood" footer="Great!" />
         </View>
-        <View style={styles.info}>
+        {/* <View style={styles.info}>
           <Info header="Header" footer="Footer" />
           <Info header="Header" footer="Footer" />
-        </View>
+        </View> */}
       </View>
       {/* <Button color="pink" title="click me" /> */}
     </SafeAreaView>

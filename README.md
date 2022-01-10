@@ -30,7 +30,7 @@ Steps:
 
 1. `gradlew clean`
 2. `npm install`
-3. Run `./gradlew assembleRelease` followed by `./gradlew bundleRelease` in the android directory.
+3. Run `./gradlew app:assembleRelease` followed by `./gradlew app:bundleRelease` in the android directory.
 
 ### Testing the APK
 

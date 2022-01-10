@@ -1,87 +1,115 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  TextInput,
-} from 'react-native';
+import React, {Component, useState, useEffect} from 'react';
+import {SafeAreaView, StyleSheet, Keyboard} from 'react-native';
+import {Dialogflow_V2} from 'react-native-dialogflow';
+import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 import tailwind from 'tailwind-rn';
-import React, {useState, useCallback, useEffect} from 'react';
-import {GiftedChat, InputToolbar} from 'react-native-gifted-chat';
+import {dialogflowConfig} from '../env';
 
 export default function Chat() {
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   const styles = StyleSheet.create({
-    info_view: {
-      flexDirection: 'column',
-      ...tailwind('h-1/2 items-center bg-pink-100 w-full py-6'),
-    },
-    info: {
-      flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'space-evenly',
-    },
     chat_room: {
-      ...tailwind('h-full w-full bg-blue-200'),
+      ...tailwind('h-full w-full bg-blue-200 text-black'),
     },
     chat_area: {
       ...tailwind('h-full w-full bg-blue-200'),
-      height: '85%',
+      height: keyboardStatus ? '100%' : '85%',
     },
   });
 
   return (
     <SafeAreaView style={styles.chat_room}>
       <SafeAreaView style={styles.chat_area}>
-        <Example />
+        <ChatBot />
       </SafeAreaView>
     </SafeAreaView>
   );
 }
 
-function Example() {
-  const [messages, setMessages] = useState([]);
+const BOT_USER = {
+  _id: 2,
+  name: 'Squeezy Companion',
+  avatar: 'https://i.imgur.com/7k12EPD.png',
+};
 
-  useEffect(() => {
-    setMessages([
+class ChatBot extends Component {
+  state = {
+    messages: [
       {
         _id: 1,
-        text: "Hi, how are you? I'm squeezy",
+        text: `Hi! I am your Squeezy Companion! Let's play!`,
         createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
+        user: BOT_USER,
       },
-    ]);
-  }, []);
+    ],
+  };
 
-  const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
+  componentDidMount() {
+    Dialogflow_V2.setConfiguration(
+      dialogflowConfig.client_email,
+      dialogflowConfig.private_key,
+      Dialogflow_V2.LANG_ENGLISH_US,
+      dialogflowConfig.project_id,
     );
-  }, []);
+  }
 
-  return (
-    <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
-    />
-  );
+  handleGoogleResponse(result) {
+    let text = result.queryResult.fulfillmentMessages[0].text.text[0];
+    this.sendBotResponse(text);
+  }
+
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+
+    let message = messages[0].text;
+    Dialogflow_V2.requestQuery(
+      message,
+      result => this.handleGoogleResponse(result),
+      error => console.log(error),
+    );
+  }
+
+  sendBotResponse(text) {
+    let msg = {
+      _id: this.state.messages.length + 1,
+      text,
+      createdAt: new Date(),
+      user: BOT_USER,
+    };
+
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, [msg]),
+    }));
+  }
+
+  render() {
+    return (
+      <GiftedChat
+        placeholderTextColor="black"
+        messages={this.state.messages}
+        textInputStyle={{color: 'black'}}
+        onSend={messages => this.onSend(messages)}
+        user={{
+          _id: 1,
+        }}
+      />
+    );
+  }
 }
-
-const AiReply = () => {
-  return <Text> test </Text>;
-};
-
-const UserReply = () => {
-  return <Text> test </Text>;
-};
-
-const UserInput = () => {
-  return <TextInput />;
-};
